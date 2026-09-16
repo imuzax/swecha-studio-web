@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /my-orders/
+Disallow: /profile/
+Disallow: /wishlist/
+Disallow: /recently-viewed/
+
+Sitemap: https://your-domain.com/sitemap.xml
