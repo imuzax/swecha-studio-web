@@ -95,9 +95,19 @@ export default function Edit({ product, categories, all_customizations }) {
                                         multiple
                                         accept="image/*"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
-                                        onChange={e => setData('images', Array.from(e.target.files))}
+                                        onChange={e => {
+                                            const files = Array.from(e.target.files);
+                                            const oversized = files.filter(f => f.size > 2 * 1024 * 1024);
+                                            if (oversized.length > 0) {
+                                                alert("Error: One or more images exceed the 2MB size limit. Please upload images less than 2MB.");
+                                                e.target.value = null;
+                                                setData('images', []);
+                                                return;
+                                            }
+                                            setData('images', files);
+                                        }}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Only JPG, PNG, WEBP, GIF allowed.</p>
+                                    <p className="text-xs text-gray-500 mt-1">Only JPG, PNG, WEBP, GIF allowed. Max size: 2MB.</p>
                                     {errors.images && <p className="text-red-500 text-xs italic mt-1">{errors.images}</p>}
                                     {Object.keys(errors).filter(key => key.startsWith('images.')).map(key => (
                                         <p key={key} className="text-red-500 text-xs italic mt-1">{errors[key]}</p>
