@@ -231,23 +231,11 @@ export default function CustomerLayout({ children }) {
 
                             <div className="relative group">
                                 {auth?.user ? (
-                                    <>
-                                        <button className="w-10 h-10 rounded-full flex items-center justify-center text-stone-700 hover:text-brand-500 hover:bg-brand-100 transition-colors btn-press focus:outline-none">
-                                            <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                            </svg>
-                                        </button>
-                                        <div className="absolute right-0 top-full pt-2 w-56 hidden group-hover:block transition-all duration-200 z-50">
-                                            <div className="bg-white rounded-2xl shadow-card border border-brand-200/80 py-2">
-                                                <div className="px-4 py-2 border-b border-stone-100 text-xs text-stone-500">
-                                                    Signed in as <strong className="text-stone-800 block truncate">{auth.user.name}</strong>
-                                                </div>
-                                                <Link href={route('logout')} method="post" as="button" className="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 mt-1">
-                                                    Log Out
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </>
+                                    <Link href={auth.user.is_admin ? route('admin.dashboard') : route('dashboard')} className="w-10 h-10 rounded-full flex items-center justify-center text-stone-700 hover:text-brand-500 hover:bg-brand-100 transition-colors btn-press focus:outline-none" title="Go to Dashboard">
+                                        <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                    </Link>
                                 ) : (
                                     <Link href={route('login')} className="w-10 h-10 rounded-full flex items-center justify-center text-stone-700 hover:text-brand-500 hover:bg-brand-100 transition-colors btn-press">
                                         <svg className="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
