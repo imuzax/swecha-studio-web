@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swecha Studio - Content Templates</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#F9F8F6',
+                            100: '#E8E4DC',
+                            600: '#C1633D',
+                            700: '#A85331',
+                            900: '#2A2522'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .copy-animation {
+            animation: copySuccess 1.5s ease-in-out;
+        }
+        @keyframes copySuccess {
+            0% { background-color: #10B981; color: white; border-color: #10B981; }
+            100% { background-color: white; color: #6B7280; border-color: #E5E7EB; }
+        }
+    </style>
+</head>
+<body class="bg-brand-50 text-gray-800 antialiased p-8 min-h-screen">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-serif text-brand-900 mb-2">Content Templates</h1>
+            <p class="text-gray-500">Copy & Paste these optimized descriptions into your Admin Panel</p>
+        </header>
+
+        <!-- CATEGORIES SECTION -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b border-brand-100 pb-2">Category Descriptions</h2>
+            
+            <div class="space-y-6">
+                <!-- Category 1 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg text-brand-600 mb-3">Concrete Jars</h3>
+                    <div class="relative group">
+                        <textarea readonly class="w-full h-24 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none focus:ring-1 focus:ring-brand-600" id="cat-jars">Discover our exclusive collection of handcrafted concrete jars. Perfect for storing trinkets, jewelry, or simply serving as a minimalist statement piece on your vanity or coffee table. Each jar is meticulously hand-poured, ensuring a unique, raw texture that brings architectural elegance to your home.</textarea>
+                        <button onclick="copyText('cat-jars', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                    </div>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg text-brand-600 mb-3">Concrete Trays</h3>
+                    <div class="relative group">
+                        <textarea readonly class="w-full h-24 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none focus:ring-1 focus:ring-brand-600" id="cat-trays">Elevate your organization with our artisanal concrete trays. Designed with sleek curves and durable craftsmanship, these trays are ideal for holding keys, displaying candles, or organizing bathroom essentials. Bring a touch of modern wabi-sabi aesthetic into your living space.</textarea>
+                        <button onclick="copyText('cat-trays', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                    </div>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg text-brand-600 mb-3">Concrete Vases</h3>
+                    <div class="relative group">
+                        <textarea readonly class="w-full h-24 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none focus:ring-1 focus:ring-brand-600" id="cat-vases">Bring nature indoors with our rustic yet refined concrete vases. Whether styling dried pampas grass, faux florals, or keeping it standalone as a sculptural piece, these heavy-weight vases provide an earthy, grounded feel to any room corner.</textarea>
+                        <button onclick="copyText('cat-vases', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS SECTION -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b border-brand-100 pb-2">Product Descriptions</h2>
+            <p class="text-sm text-gray-500 mb-6">Use these templates for your individual products. You can slightly tweak the names for different products.</p>
+
+            <div class="space-y-8">
+                <!-- Product 1 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg text-brand-600 mb-4 border-b pb-2">Big Shankh Jar</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Short Description</label>
+                        <div class="relative">
+                            <textarea readonly class="w-full h-16 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none" id="prod-shankh-short">A spiritually inspired, conch-shell (Shankh) shaped concrete jar, perfect for festive gifting or adding a serene touch to your pooja room.</textarea>
+                            <button onclick="copyText('prod-shankh-short', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Full Description (HTML Supported)</label>
+                        <div class="relative">
+                            <textarea readonly class="w-full h-40 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none font-mono" id="prod-shankh-full"><p>The <strong>Big Shankh Jar</strong> blends traditional Indian spirituality with modern minimalist design. Hand-poured using our proprietary high-strength concrete blend, this piece is built to last while looking exceptionally delicate.</p>
+<ul>
+    <li><strong>Dimensions:</strong> 15cm x 10cm</li>
+    <li><strong>Material:</strong> Premium Eco-Friendly Concrete</li>
+    <li><strong>Finish:</strong> Sealed for water and stain resistance</li>
+    <li><strong>Care:</strong> Wipe gently with a damp cloth. Do not scrub.</li>
+</ul>
+<p><em>Note: As each piece is individually handmade, slight variations in color and tiny air bubbles are natural characteristics that make your piece truly one-of-a-kind.</em></p></textarea>
+                            <button onclick="copyText('prod-shankh-full', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg text-brand-600 mb-4 border-b pb-2">Oval Tray - Marble Effect</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Short Description</label>
+                        <div class="relative">
+                            <textarea readonly class="w-full h-16 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none" id="prod-tray-short">A versatile oval tray featuring a luxurious hand-swirled marble effect. The ultimate organizational accent for your perfumes, jewelry, or candles.</textarea>
+                            <button onclick="copyText('prod-tray-short', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Full Description (HTML Supported)</label>
+                        <div class="relative">
+                            <textarea readonly class="w-full h-40 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none font-mono" id="prod-tray-full"><p>Elevate your dresser with our <strong>Oval Tray</strong>. The stunning marble effect is achieved through a specialized hand-pouring technique, meaning no two trays will ever share the exact same pattern.</p>
+<ul>
+    <li><strong>Dimensions:</strong> 18cm x 9.5cm</li>
+    <li><strong>Base:</strong> Cork padding attached beneath to protect your furniture from scratches</li>
+    <li><strong>Usage:</strong> Ideal for bathrooms, bedside tables, and entryways.</li>
+</ul>
+<p><em>Perfect for gifting or treating yourself to a little everyday luxury.</em></p></textarea>
+                            <button onclick="copyText('prod-tray-full', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Product 3 -->
+                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-lg text-brand-600 mb-4 border-b pb-2">DIY Painting Kit (Donut/Vehicles)</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Short Description</label>
+                        <div class="relative">
+                            <textarea readonly class="w-full h-16 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none" id="prod-diy-short">Unleash your creativity! An all-in-one DIY Concrete Painting Kit perfect for kids, date nights, or therapeutic weekend crafts.</textarea>
+                            <button onclick="copyText('prod-diy-short', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Full Description (HTML Supported)</label>
+                        <div class="relative">
+                            <textarea readonly class="w-full h-40 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 resize-none focus:outline-none font-mono" id="prod-diy-full"><p>Everything you need for a fun, creative evening is packed right inside our <strong>DIY Painting Kit</strong>. Skip the screen time and bond over bringing plain concrete to vibrant life.</p>
+<h4><strong>What's inside the box?</strong></h4>
+<ul>
+    <li>1x Smooth unpainted concrete figure (Donut / Car / Bug)</li>
+    <li>6x Non-toxic vibrant acrylic paint colors</li>
+    <li>1x Premium painting brush</li>
+    <li>1x Color mixing palette</li>
+</ul>
+<p><em>Safe for kids above 3 years old under adult supervision. A wonderful return gift idea for birthday parties!</em></p></textarea>
+                            <button onclick="copyText('prod-diy-full', this)" class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-md text-xs font-semibold shadow-sm hover:bg-gray-50 transition-colors">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function copyText(elementId, btnElement) {
+            const copyText = document.getElementById(elementId);
+            
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                // Change button state
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "Copied!";
+                btnElement.classList.add('copy-animation');
+                
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.classList.remove('copy-animation');
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>

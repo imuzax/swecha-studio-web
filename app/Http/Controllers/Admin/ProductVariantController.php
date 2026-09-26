@@ -14,7 +14,7 @@ class ProductVariantController extends Controller
         $data = $request->validate([
             'type' => 'required|string|max:50',
             'value' => 'required|string|max:100',
-            'sku' => 'nullable|string|max:100|unique:product_variants,sku',
+            'sku' => 'nullable|string|max:100',
             'price_adjustment' => 'required|numeric',
             'stock_quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
@@ -34,7 +34,7 @@ class ProductVariantController extends Controller
         $data = $request->validate([
             'type' => 'required|string|max:50',
             'value' => 'required|string|max:100',
-            'sku' => 'nullable|string|max:100|unique:product_variants,sku,' . $variant->id,
+            'sku' => 'nullable|string|max:100',
             'price_adjustment' => 'required|numeric',
             'stock_quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
