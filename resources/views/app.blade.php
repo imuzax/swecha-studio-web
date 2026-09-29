@@ -36,21 +36,21 @@
         <meta name="author" content="Muzaffar Hussain (iInfynite)">
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
-            "@type": "WebSite",
+            "@@context": "https://schema.org",
+            "@@type": "WebSite",
             "name": "{{ config('app.name', 'Swecha Studio') }}",
             "url": "{{ url('/') }}",
             "author": {
-                "@type": "Person",
+                "@@type": "Person",
                 "name": "Muzaffar Hussain",
                 "jobTitle": "Software Engineer",
                 "worksFor": {
-                    "@type": "Organization",
+                    "@@type": "Organization",
                     "name": "iInfynite"
                 }
             },
             "creator": {
-                "@type": "Organization",
+                "@@type": "Organization",
                 "name": "iInfynite",
                 "founder": "Muzaffar Hussain"
             }
