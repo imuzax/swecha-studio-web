@@ -3,6 +3,27 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- Primary Meta Tags -->
+        <meta name="description" content="Swecha Studio - Premium Handmade Concrete Home Decor. Discover our unique collection of concrete jars, trays, coasters, and custom artistic pieces.">
+        <meta name="keywords" content="Swecha Studio, Concrete Home Decor, Handmade Decor, Concrete Jars, Concrete Trays, Artistic Home Accessories, Buy Home Decor Online">
+        <meta name="robots" content="index, follow">
+        <meta name="language" content="English">
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url('/') }}">
+        <meta property="og:title" content="Swecha Studio | Premium Handmade Decor">
+        <meta property="og:description" content="Swecha Studio - Premium Handmade Concrete Home Decor. Discover our unique collection of concrete jars, trays, coasters, and custom artistic pieces.">
+        <meta property="og:image" content="{{ asset('images/main_logo.png') }}">
+        
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ url('/') }}">
+        <meta property="twitter:title" content="Swecha Studio | Premium Handmade Decor">
+        <meta property="twitter:description" content="Swecha Studio - Premium Handmade Concrete Home Decor. Discover our unique collection of concrete jars, trays, coasters, and custom artistic pieces.">
+        <meta property="twitter:image" content="{{ asset('images/main_logo.png') }}">
+
         <title inertia>{{ config('app.name', 'Swecha Studio') }}</title>
         <link rel="icon" type="image/png" href="{{ asset('images/main_logo.png') }}">
 
