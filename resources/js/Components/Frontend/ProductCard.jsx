@@ -78,11 +78,11 @@ export default function ProductCard({ product }) {
                 <div className="mt-auto pt-3 flex items-center justify-between border-t border-brand-50">
                     <div className="flex items-baseline gap-1.5">
                         <span className="font-sans font-bold text-brand-900 text-sm sm:text-base tracking-tight">
-                            ₹{Number(product.price).toLocaleString('en-IN')}
+                            ₹{Number(product.sale_price || product.price).toLocaleString('en-IN')}
                         </span>
-                        {product.compare_at_price && Number(product.compare_at_price) > Number(product.price) && (
+                        {product.sale_price && Number(product.sale_price) > 0 && Number(product.sale_price) < Number(product.price) && (
                             <span className="font-sans text-xs text-stone-400 line-through">
-                                ₹{Number(product.compare_at_price).toLocaleString('en-IN')}
+                                ₹{Number(product.price).toLocaleString('en-IN')}
                             </span>
                         )}
                     </div>

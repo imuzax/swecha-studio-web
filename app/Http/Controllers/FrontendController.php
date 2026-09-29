@@ -11,33 +11,45 @@ class FrontendController extends Controller
 {
     public function home()
     {
-        // 1. Trending (Activity in last 7 days)
+        // 1. Trending (Activity in last 30 days, must have activity)
         $trendingProducts = Product::with('images', 'category')
             ->where('is_active', true)
             ->withCount(['activities as recent_activity' => function($q) {
-                $q->where('created_at', '>=', now()->subDays(7));
+                $q->where('created_at', '>=', now()->subDays(30));
             }])
+            ->having('recent_activity', '>', 0)
             ->orderByDesc('recent_activity')
             ->take(8)
             ->get();
 
-        // 2. Popular (sales_count * 10 + views_count)
+        $trendingIds = $trendingProducts->pluck('id')->toArray();
+
+        // 2. Popular (lifetime sales, must have sales, avoid duplicates)
         $popularProducts = Product::with('images', 'category')
             ->where('is_active', true)
-            ->orderByRaw('(sales_count * 10) + views_count DESC')
+            ->where('sales_count', '>', 0)
+            ->whereNotIn('id', $trendingIds)
+            ->orderByDesc('sales_count')
             ->take(8)
             ->get();
 
-        // 3. Most Viewed
+        $usedIds = array_merge($trendingIds, $popularProducts->pluck('id')->toArray());
+
+        // 3. Most Viewed (avoid duplicates)
         $mostViewedProducts = Product::with('images', 'category')
             ->where('is_active', true)
+            ->where('views_count', '>', 0)
+            ->whereNotIn('id', $usedIds)
             ->orderByDesc('views_count')
             ->take(8)
             ->get();
 
-        // 4. New Arrivals
+        $usedIds = array_merge($usedIds, $mostViewedProducts->pluck('id')->toArray());
+
+        // 4. New Arrivals (avoid duplicates)
         $newArrivals = Product::with('images', 'category')
             ->where('is_active', true)
+            ->whereNotIn('id', $usedIds)
             ->latest()
             ->take(8)
             ->get();
@@ -132,11 +144,11 @@ class FrontendController extends Controller
                     break;
                 case 'popular':
                 default:
-                    $query->orderByRaw('(sales_count * 10) + views_count DESC')->latest();
+                    $query->orderByDesc('sales_count')->latest();
                     break;
             }
         } else {
-            $query->orderByRaw('(sales_count * 10) + views_count DESC')->latest();
+            $query->orderByDesc('sales_count')->latest();
         }
 
         $products = $query->paginate(12)->withQueryString();

@@ -24,6 +24,10 @@ class WorkshopBookingController extends Controller
 
     public function store(Request $request, Workshop $workshop, WorkshopDate $date)
     {
+        if ($date->workshop_id !== $workshop->id) {
+            return back()->with('error', 'Invalid workshop date relationship.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
@@ -34,18 +38,48 @@ class WorkshopBookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $date->bookings()->create($validated);
-        $date->increment('taken_seats', $validated['tickets_count']);
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($date, $validated) {
+                // Lock the date row
+                $lockedDate = WorkshopDate::where('id', $date->id)->lockForUpdate()->firstOrFail();
+
+                // Capacity check
+                if (($lockedDate->taken_seats + $validated['tickets_count']) > $lockedDate->total_seats) {
+                    throw new \Exception('Not enough available seats for this booking.');
+                }
+
+                $lockedDate->bookings()->create($validated);
+                $lockedDate->increment('taken_seats', $validated['tickets_count']);
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
 
         return back()->with('success', 'Booking added successfully.');
     }
 
     public function destroy(Workshop $workshop, WorkshopDate $date, WorkshopBooking $booking)
     {
-        if ($booking->workshop_date_id === $date->id) {
-            $date->decrement('taken_seats', $booking->tickets_count);
-            $booking->delete();
+        if ($date->workshop_id !== $workshop->id || $booking->workshop_date_id !== $date->id) {
+            return back()->with('error', 'Invalid booking relationship.');
         }
+
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($date, $booking) {
+                $lockedDate = WorkshopDate::where('id', $date->id)->lockForUpdate()->firstOrFail();
+                
+                if ($lockedDate->taken_seats >= $booking->tickets_count) {
+                    $lockedDate->decrement('taken_seats', $booking->tickets_count);
+                } else {
+                    $lockedDate->update(['taken_seats' => 0]);
+                }
+                
+                $booking->delete();
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to remove booking.');
+        }
+
         return back()->with('success', 'Booking removed successfully.');
     }
 }

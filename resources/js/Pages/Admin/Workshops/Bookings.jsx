@@ -2,11 +2,13 @@ import AdminLayout from '@/Layouts/Admin/AdminLayout';
 import { Head, useForm, Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import PrimaryButton from '@/Components/PrimaryButton';
+import ConfirmModal from '@/Components/ConfirmModal';
 import { useState } from 'react';
 
 export default function Bookings({ workshop }) {
     const [selectedDateId, setSelectedDateId] = useState(workshop.dates.length > 0 ? workshop.dates[0].id : null);
     const [isAdding, setIsAdding] = useState(false);
+    const [bookingToRemove, setBookingToRemove] = useState(null);
 
     const workshopDate = workshop.dates.find(d => d.id === selectedDateId);
 
@@ -31,11 +33,15 @@ export default function Bookings({ workshop }) {
         });
     };
 
-    const removeBooking = (bookingId) => {
-        if (!workshopDate) return;
-        if (confirm('Are you sure you want to remove this booking?')) {
-            router.delete(route('admin.workshops.bookings.destroy', [workshop.id, workshopDate.id, bookingId]));
-        }
+    const confirmRemoveBooking = (bookingId) => {
+        setBookingToRemove(bookingId);
+    };
+
+    const removeBooking = () => {
+        if (!workshopDate || !bookingToRemove) return;
+        router.delete(route('admin.workshops.bookings.destroy', [workshop.id, workshopDate.id, bookingToRemove]), {
+            onFinish: () => setBookingToRemove(null)
+        });
     };
 
     return (
@@ -147,7 +153,7 @@ export default function Bookings({ workshop }) {
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <button 
-                                                    onClick={() => removeBooking(booking.id)}
+                                                    onClick={() => confirmRemoveBooking(booking.id)}
                                                     className="text-sm font-medium text-red-600 hover:text-red-900 transition-colors"
                                                 >
                                                     Remove
@@ -235,7 +241,7 @@ export default function Bookings({ workshop }) {
                                         className="w-full border-[#E8E4DC] rounded-xl focus:ring-[#C1633D] focus:border-[#C1633D] text-sm"
                                     >
                                         <option value="whatsapp">WhatsApp / Direct</option>
-                                        <option value="razorpay">Razorpay / Website</option>
+
                                         <option value="cash">Cash</option>
                                     </select>
                                 </div>
@@ -281,6 +287,16 @@ export default function Bookings({ workshop }) {
                     </div>
                 )}
             </div>
+
+            <ConfirmModal
+                isOpen={!!bookingToRemove}
+                title="Remove Booking"
+                message="Are you sure you want to remove this booking? This will free up the seats."
+                onConfirm={removeBooking}
+                onCancel={() => setBookingToRemove(null)}
+                confirmText="Remove Booking"
+                confirmStyle="danger"
+            />
         </AdminLayout>
     );
 }

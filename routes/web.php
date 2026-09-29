@@ -48,18 +48,17 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     // Checkout Routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout/razorpay-order', [CheckoutController::class, 'createRazorpayOrder'])->middleware('throttle:20,1')->name('checkout.razorpay.create');
     Route::post('/checkout', [CheckoutController::class, 'process'])->middleware('throttle:10,1')->name('checkout.process');
     Route::get('/order-success/{order}', [CheckoutController::class, 'success'])->name('order.success');
 
     Route::get('/my-orders', function () {
-        $orders = Order::where('user_id', auth()->id())->latest()->get();
+        $orders = Order::with('items.product.images')->where('user_id', auth()->id())->latest()->get();
         return Inertia::render('Frontend/Account/Orders', ['orders' => $orders]);
     })->name('account.orders');
     
     Route::get('/my-orders/{order:order_number}', function (Order $order) {
         if ($order->user_id !== auth()->id()) abort(403);
-        $order->load('items.product');
+        $order->load('items.product.images');
         return Inertia::render('Frontend/Account/OrderDetails', ['order' => $order]);
     })->name('account.order.details');
 

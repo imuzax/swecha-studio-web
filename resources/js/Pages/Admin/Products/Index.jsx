@@ -1,12 +1,22 @@
 import AdminLayout from '@/Layouts/Admin/AdminLayout';
 import { Head, Link, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
+import ConfirmModal from '@/Components/ConfirmModal';
 
 export default function Index({ products, categories, filters }) {
     const { flash } = usePage().props;
     const [search, setSearch] = useState(filters?.search || '');
     const [categoryId, setCategoryId] = useState(filters?.category_id || '');
     const [isActive, setIsActive] = useState(filters?.is_active || '');
+    const [productToDelete, setProductToDelete] = useState(null);
+
+    const deleteProduct = () => {
+        if (productToDelete) {
+            router.delete(route('admin.products.destroy', productToDelete), {
+                onFinish: () => setProductToDelete(null)
+            });
+        }
+    };
 
     const handleFilter = (e) => {
         e.preventDefault();
@@ -130,11 +140,7 @@ export default function Index({ products, categories, filters }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link href={route('admin.products.edit', product.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                        <button onClick={() => {
-                                            if (confirm('Are you sure you want to delete this product?')) {
-                                                router.delete(route('admin.products.destroy', product.id));
-                                            }
-                                        }} className="text-red-600 hover:text-red-900">Delete</button>
+                                        <button onClick={() => setProductToDelete(product.id)} className="text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -162,6 +168,16 @@ export default function Index({ products, categories, filters }) {
                     </div>
                 )}
             </div>
+
+            <ConfirmModal
+                isOpen={!!productToDelete}
+                title="Delete Product"
+                message="Are you sure you want to delete this product? This action cannot be undone."
+                onConfirm={deleteProduct}
+                onCancel={() => setProductToDelete(null)}
+                confirmText="Delete Product"
+                confirmStyle="danger"
+            />
         </AdminLayout>
     );
 }

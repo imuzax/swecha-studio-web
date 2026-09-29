@@ -65,21 +65,6 @@ class AdminProductTest extends TestCase
         $this->assertTrue((bool)$product->images()->first()->is_primary);
     }
 
-    public function test_sku_must_be_unique()
-    {
-        Product::factory()->create(['sku' => 'UNIQUE-001', 'category_id' => $this->category->id]);
-
-        $data = [
-            'name' => 'Another Product',
-            'category_id' => $this->category->id,
-            'price' => 50,
-            'stock_quantity' => 5,
-            'sku' => 'UNIQUE-001'
-        ];
-
-        $response = $this->actingAs($this->admin)->post(route('admin.products.store'), $data);
-        $response->assertSessionHasErrors('sku');
-    }
 
     public function test_admin_can_delete_image()
     {

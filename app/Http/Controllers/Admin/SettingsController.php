@@ -55,14 +55,14 @@ class SettingsController extends Controller
 
         // Handle File Uploads
         $request->validate([
-            'site_logo' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic|max:51200',
-            'site_favicon' => 'nullable|file|mimes:jpeg,png,ico,webp,gif,svg|max:5120',
-            'hero_media' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic,mp4,webm|max:51200',
-            'about_media' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic,mp4,webm|max:51200',
-            'instagram_media_1' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic,mp4,webm|max:51200',
-            'instagram_media_2' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic,mp4,webm|max:51200',
-            'instagram_media_3' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic,mp4,webm|max:51200',
-            'instagram_media_4' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,svg,bmp,avif,heic,mp4,webm|max:51200',
+            'site_logo' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic|max:10240',
+            'site_favicon' => 'nullable|file|mimes:jpeg,png,ico,webp,gif|max:2048',
+            'hero_media' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic,mp4,webm|max:51200',
+            'about_media' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic,mp4,webm|max:51200',
+            'instagram_media_1' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic,mp4,webm|max:51200',
+            'instagram_media_2' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic,mp4,webm|max:51200',
+            'instagram_media_3' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic,mp4,webm|max:51200',
+            'instagram_media_4' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,bmp,avif,heic,mp4,webm|max:51200',
         ]);
 
         foreach ($mediaFields as $field) {

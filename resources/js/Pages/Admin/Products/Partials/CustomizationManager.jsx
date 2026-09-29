@@ -1,9 +1,12 @@
 import { useForm, router } from '@inertiajs/react';
+import { useState } from 'react';
+import ConfirmModal from '@/Components/ConfirmModal';
 
 export default function CustomizationManager({ product, allCustomizations }) {
     const { data, setData, post, processing } = useForm({
         customization_id: ''
     });
+    const [customizationToDetach, setCustomizationToDetach] = useState(null);
 
     const handleAttach = (e) => {
         e.preventDefault();
@@ -13,10 +16,11 @@ export default function CustomizationManager({ product, allCustomizations }) {
         });
     };
 
-    const handleDetach = (customization) => {
-        if (confirm(`Are you sure you want to remove the customization "${customization.name}" from this product?`)) {
-            router.delete(route('admin.products.customizations.detach', { product: product.id, customization: customization.id }), {
-                preserveScroll: true
+    const handleDetach = () => {
+        if (customizationToDetach) {
+            router.delete(route('admin.products.customizations.detach', { product: product.id, customization: customizationToDetach.id }), {
+                preserveScroll: true,
+                onFinish: () => setCustomizationToDetach(null)
             });
         }
     };
@@ -63,7 +67,7 @@ export default function CustomizationManager({ product, allCustomizations }) {
                                     <p className="text-xs text-gray-500">Type: {c.type}</p>
                                 </div>
                                 <button
-                                    onClick={() => handleDetach(c)}
+                                    onClick={() => setCustomizationToDetach(c)}
                                     className="text-red-600 hover:text-red-900 text-sm font-semibold"
                                 >
                                     Remove
@@ -92,6 +96,16 @@ export default function CustomizationManager({ product, allCustomizations }) {
                     </div>
                 )}
             </div>
+
+            <ConfirmModal
+                isOpen={!!customizationToDetach}
+                title="Remove Customization"
+                message={`Are you sure you want to remove the customization "${customizationToDetach?.name}" from this product?`}
+                onConfirm={handleDetach}
+                onCancel={() => setCustomizationToDetach(null)}
+                confirmText="Remove"
+                confirmStyle="danger"
+            />
         </div>
     );
 }

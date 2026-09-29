@@ -2,6 +2,7 @@ import AdminLayout from '@/Layouts/Admin/AdminLayout';
 import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import ConfirmModal from '@/Components/ConfirmModal';
 
 export default function OrderShow({ order }) {
     const { flash } = usePage().props;
@@ -17,6 +18,8 @@ export default function OrderShow({ order }) {
 
     const [isShipModalOpen, setIsShipModalOpen] = useState(false);
     const [actionLoading, setActionLoading] = useState(false);
+    const [cancelModalOpen, setCancelModalOpen] = useState(false);
+    const [pendingStatus, setPendingStatus] = useState(null);
 
     const generateWhatsAppUrl = () => {
         if (!order.customer || !order.customer.phone) return '#';
@@ -27,10 +30,15 @@ export default function OrderShow({ order }) {
 
     // Fast 1-click status updater
     const quickUpdateStatus = (newStatus) => {
-        if (newStatus === 'cancelled' && !confirm('Are you sure you want to cancel / reject this order?')) {
+        if (newStatus === 'cancelled') {
+            setPendingStatus(newStatus);
+            setCancelModalOpen(true);
             return;
         }
+        executeStatusUpdate(newStatus);
+    };
 
+    const executeStatusUpdate = (newStatus) => {
         setActionLoading(true);
         router.put(route('admin.orders.update', order.id), {
             order_status: newStatus,
@@ -565,6 +573,22 @@ export default function OrderShow({ order }) {
                     </div>
                 )}
             </AnimatePresence>
+
+            <ConfirmModal
+                isOpen={cancelModalOpen}
+                title="Cancel Order"
+                message="Are you sure you want to cancel / reject this order? This action cannot be undone."
+                onConfirm={() => {
+                    setCancelModalOpen(false);
+                    executeStatusUpdate(pendingStatus);
+                }}
+                onCancel={() => {
+                    setCancelModalOpen(false);
+                    setPendingStatus(null);
+                }}
+                confirmText="Cancel Order"
+                confirmStyle="danger"
+            />
         </AdminLayout>
     );
 }

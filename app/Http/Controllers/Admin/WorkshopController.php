@@ -98,28 +98,39 @@ class WorkshopController extends Controller
         if (!empty($validated['dates'])) {
             foreach ($validated['dates'] as $dateData) {
                 if (isset($dateData['id'])) {
-                    $workshop->dates()->where('id', $dateData['id'])->update([
-                        'date' => $dateData['date'],
-                        'start_time' => $dateData['start_time'] ?? null,
-                        'end_time' => $dateData['end_time'] ?? null,
-                        'total_seats' => $dateData['total_seats'],
-                        'taken_seats' => $dateData['taken_seats'],
-                    ]);
-                    $existingDateIds[] = $dateData['id'];
+                    $existingDate = $workshop->dates()->find($dateData['id']);
+                    if ($existingDate) {
+                        if ($dateData['total_seats'] < $existingDate->taken_seats) {
+                            return back()->withErrors(['dates' => 'Total seats cannot be less than already taken seats.']);
+                        }
+                        $existingDate->update([
+                            'date' => $dateData['date'],
+                            'start_time' => $dateData['start_time'] ?? null,
+                            'end_time' => $dateData['end_time'] ?? null,
+                            'total_seats' => $dateData['total_seats'],
+                        ]);
+                        $existingDateIds[] = $existingDate->id;
+                    }
                 } else {
                     $newDate = $workshop->dates()->create([
                         'date' => $dateData['date'],
                         'start_time' => $dateData['start_time'] ?? null,
                         'end_time' => $dateData['end_time'] ?? null,
                         'total_seats' => $dateData['total_seats'],
-                        'taken_seats' => $dateData['taken_seats'],
+                        'taken_seats' => 0, // Always 0 for new
                     ]);
                     $existingDateIds[] = $newDate->id;
                 }
             }
         }
         
-        $workshop->dates()->whereNotIn('id', $existingDateIds)->delete();
+        $datesToDelete = $workshop->dates()->whereNotIn('id', $existingDateIds)->get();
+        foreach ($datesToDelete as $dateToDelete) {
+            if ($dateToDelete->taken_seats > 0 || $dateToDelete->bookings()->count() > 0) {
+                return back()->withErrors(['dates' => 'Cannot delete a date that has existing bookings.']);
+            }
+            $dateToDelete->delete();
+        }
 
         if ($request->hasFile('images')) {
             $existingCount = $workshop->images()->count();

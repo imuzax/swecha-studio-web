@@ -12,7 +12,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Setting;
-use App\Services\RazorpayService;
 use App\Models\AnalyticsEvent;
 
 class CheckoutController extends Controller
@@ -54,69 +53,12 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function createRazorpayOrder(Request $request, RazorpayService $razorpayService)
-    {
-        $cart = session()->get('cart', []);
-        
-        if (empty($cart)) {
-            return response()->json(['error' => 'Cart is empty'], 400);
-        }
-
-        $total = 0;
-        $productIds = array_column($cart, 'id');
-        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
-
-        foreach ($cart as $item) {
-            $product = $products->get($item['id']);
-            $variant = isset($item['variant_id']) ? $product->variants->firstWhere('id', $item['variant_id']) : null;
-            $availableStock = $variant ? $variant->stock_quantity : ($product ? $product->stock_quantity : 0);
-            
-            if (!$product || !$product->is_active || $availableStock < $item['quantity']) {
-                return response()->json(['error' => 'Invalid product or insufficient stock'], 400);
-            }
-            try {
-                $price = $product->calculatePrice($item['variant_id'] ?? null, $item['customizations'] ?? []);
-                $total += $price * $item['quantity'];
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Invalid configuration'], 400);
-            }
-        }
-
-        try {
-            $orderData = $razorpayService->createOrder([
-                'amount' => $total,
-                'receipt' => 'RCPT_' . Str::random(10)
-            ]);
-
-            return response()->json([
-                'id' => $orderData['id'],
-                'amount' => $orderData['amount'],
-                'currency' => $orderData['currency'],
-                'key' => config('services.razorpay.key')
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create payment order'], 500);
-        }
-    }
-
-    public function process(CheckoutRequest $request, RazorpayService $razorpayService)
+    public function process(CheckoutRequest $request)
     {
         $cart = session()->get('cart', []);
         
         if (empty($cart)) {
             return redirect()->route('shop');
-        }
-
-        if ($request->payment_method === 'razorpay') {
-            $isValid = $razorpayService->verifyPayment($request->only([
-                'razorpay_order_id',
-                'razorpay_payment_id',
-                'razorpay_signature'
-            ]));
-
-            if (!$isValid) {
-                return redirect()->route('checkout.index')->with('error', 'Payment verification failed. Please try again.');
-            }
         }
 
         $maxAttempts = 3;
@@ -260,24 +202,12 @@ class CheckoutController extends Controller
             $order->discount = 0;
             $order->total = $total;
             
-            if ($request->payment_method === 'razorpay') {
-                $order->order_status = 'confirmed';
-                $order->payment_status = 'paid';
-                $order->payment_method = 'razorpay';
-                $order->amount_paid = $total;
-                $order->balance_due = 0;
-                $order->advance_required = 0;
-                $order->razorpay_payment_id = $request->razorpay_payment_id;
-                $order->razorpay_order_id = $request->razorpay_order_id;
-                $order->is_stock_deducted = true;
-            } else {
-                $order->order_status = 'pending';
-                $order->payment_status = 'pending';
-                $order->payment_method = 'whatsapp';
-                $order->amount_paid = 0;
-                $order->balance_due = $total;
-                $order->advance_required = 0; // Removing 50% advance calc from flow
-            }
+            $order->order_status = 'pending';
+            $order->payment_status = 'pending';
+            $order->payment_method = 'whatsapp';
+            $order->amount_paid = 0;
+            $order->balance_due = $total;
+            $order->advance_required = 0; // Removing 50% advance calc from flow
             
             $order->shipping_address = $formattedAddress;
             $order->billing_address = $formattedAddress;
@@ -297,19 +227,6 @@ class CheckoutController extends Controller
                     'variant_info' => $data['variant_info'],
                     'customization_info' => $data['customization_info'],
                 ]);
-
-                // Reduce stock for paid orders
-                if ($request->payment_method === 'razorpay') {
-                    $product = $products->get($data['product_id']);
-                    if ($product) {
-                        if (!empty($data['variant_id'])) {
-                            $product->variants()->where('id', $data['variant_id'])->decrement('stock_quantity', $data['quantity']);
-                        } else {
-                            $product->decrement('stock_quantity', $data['quantity']);
-                        }
-                        $product->increment('sales_count', $data['quantity']);
-                    }
-                }
             }
 
             // Clear Cart & set session authorization for success page
@@ -317,7 +234,7 @@ class CheckoutController extends Controller
             session()->put('last_order', $order->order_number);
 
             AnalyticsEvent::create([
-                'event_name' => $order->payment_method === 'razorpay' ? 'payment_success' : 'whatsapp_checkout',
+                'event_name' => 'whatsapp_checkout',
                 'user_id' => auth()->id(),
                 'session_id' => session()->getId(),
                 'url' => route('checkout.process'),

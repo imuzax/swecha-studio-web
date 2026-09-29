@@ -1,10 +1,20 @@
 import AdminLayout from '@/Layouts/Admin/AdminLayout';
 import { Head, Link, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
+import ConfirmModal from '@/Components/ConfirmModal';
 
 export default function Index({ categories, filters }) {
     const { flash } = usePage().props;
     const [search, setSearch] = useState(filters?.search || '');
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+    const deleteCategory = () => {
+        if (categoryToDelete) {
+            router.delete(route('admin.categories.destroy', categoryToDelete), {
+                onFinish: () => setCategoryToDelete(null)
+            });
+        }
+    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -78,11 +88,7 @@ export default function Index({ categories, filters }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link href={route('admin.categories.edit', category.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                        <button onClick={() => {
-                                            if (confirm('Are you sure you want to delete this category?')) {
-                                                router.delete(route('admin.categories.destroy', category.id));
-                                            }
-                                        }} className="text-red-600 hover:text-red-900">Delete</button>
+                                        <button onClick={() => setCategoryToDelete(category.id)} className="text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -110,6 +116,16 @@ export default function Index({ categories, filters }) {
                     </div>
                 )}
             </div>
+
+            <ConfirmModal
+                isOpen={!!categoryToDelete}
+                title="Delete Category"
+                message="Are you sure you want to delete this category? This action cannot be undone."
+                onConfirm={deleteCategory}
+                onCancel={() => setCategoryToDelete(null)}
+                confirmText="Delete Category"
+                confirmStyle="danger"
+            />
         </AdminLayout>
     );
 }

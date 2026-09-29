@@ -19,10 +19,21 @@ export default function Cart({ cart, total }) {
                 <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-widest mb-8">Your Cart</h1>
                 
                 {cart.length === 0 ? (
-                    <div className="text-center py-16 border-t border-b">
-                        <p className="text-gray-500 mb-6 text-lg">Your cart is currently empty.</p>
-                        <Link href={route('shop')} className="inline-block bg-black text-white px-8 py-3 uppercase tracking-widest font-bold text-sm hover:bg-gray-800 transition">
-                            Continue Shopping
+                    <div className="py-20 text-center bg-brand-50/50 rounded-3xl border border-brand-200/60 max-w-3xl mx-auto my-12">
+                        <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center shadow-soft mb-6">
+                            <svg className="w-8 h-8 text-brand-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <h3 className="font-serif text-2xl text-brand-900 mb-2">Your cart is empty</h3>
+                        <p className="text-stone-500 mb-8 max-w-md mx-auto text-sm">
+                            Looks like you haven't added any concrete masterpieces to your cart yet.
+                        </p>
+                        <Link 
+                            href={route('shop')} 
+                            className="inline-block bg-brand-800 hover:bg-brand-900 text-white font-semibold px-8 py-3.5 rounded-full text-sm transition-colors shadow-soft"
+                        >
+                            Explore Collection
                         </Link>
                     </div>
                 ) : (

@@ -27,8 +27,8 @@ export default function Dashboard({ stats, recent_orders, popular_products, mont
                 </div>
             </div>
 
-            {/* Top Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Top Stats Cards - Financial & Orders */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -60,9 +60,14 @@ export default function Dashboard({ stats, recent_orders, popular_products, mont
                     className="bg-white p-6 rounded-2xl border border-[#E8E4DC] shadow-sm relative overflow-hidden group"
                 >
                     <div className="relative z-10">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Orders</p>
-                        <h3 className="text-3xl font-serif text-gray-800 mb-1">{stats.total_orders}</h3>
-                        <p className="text-xs text-gray-500 font-sans font-medium">{stats.current_month_order_count} this month</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Orders Breakdown</p>
+                        <h3 className="text-xl font-serif text-gray-800 mb-1">{stats.total_orders} Total</h3>
+                        <div className="flex gap-2 text-xs font-medium">
+                            <span className="text-amber-600">{stats.pending_orders} Pend</span>
+                            <span className="text-blue-600">{stats.processing_orders} Proc</span>
+                            <span className="text-emerald-600">{stats.completed_orders} Done</span>
+                            <span className="text-red-600">{stats.cancelled_orders} Canc</span>
+                        </div>
                     </div>
                 </motion.div>
 
@@ -73,8 +78,53 @@ export default function Dashboard({ stats, recent_orders, popular_products, mont
                     className="bg-white p-6 rounded-2xl border border-[#E8E4DC] shadow-sm relative overflow-hidden group"
                 >
                     <div className="relative z-10">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Catalog Size</p>
-                        <h3 className="text-3xl font-serif text-gray-800 mb-2">{stats.total_products} <span className="text-sm text-gray-400 font-sans font-medium">products</span></h3>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Catalog & Stock</p>
+                        <h3 className="text-xl font-serif text-gray-800 mb-1">{stats.total_products} Products</h3>
+                        <div className="flex gap-2 text-xs font-medium">
+                            <span className="text-emerald-600">{stats.active_products} Active</span>
+                            {stats.low_stock_products > 0 && (
+                                <span className="text-red-600">{stats.low_stock_products} Low Stock</span>
+                            )}
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* Second Row Stats - Workshops */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-white p-6 rounded-2xl border border-[#E8E4DC] shadow-sm relative overflow-hidden group"
+                >
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Workshops</p>
+                        <h3 className="text-2xl font-serif text-gray-800 mb-1">{stats.total_workshops}</h3>
+                    </div>
+                </motion.div>
+
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="bg-white p-6 rounded-2xl border border-[#E8E4DC] shadow-sm relative overflow-hidden group"
+                >
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Upcoming Dates</p>
+                        <h3 className="text-2xl font-serif text-[#C1633D] mb-1">{stats.upcoming_workshop_dates}</h3>
+                    </div>
+                </motion.div>
+
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="bg-white p-6 rounded-2xl border border-[#E8E4DC] shadow-sm relative overflow-hidden group"
+                >
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Workshop Bookings</p>
+                        <h3 className="text-2xl font-serif text-[#4B705D] mb-1">{stats.total_workshop_bookings}</h3>
                     </div>
                 </motion.div>
             </div>

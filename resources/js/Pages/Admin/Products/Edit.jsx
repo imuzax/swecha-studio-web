@@ -3,9 +3,21 @@ import { Head, useForm, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
 import VariantManager from './Partials/VariantManager';
 import CustomizationManager from './Partials/CustomizationManager';
+import ConfirmModal from '@/Components/ConfirmModal';
 
 export default function Edit({ product, categories, all_customizations }) {
     const { flash } = usePage().props;
+    const [imageToDelete, setImageToDelete] = useState(null);
+
+    const deleteImage = () => {
+        if (imageToDelete) {
+            router.delete(route('admin.products.images.destroy', { product: product.id, image: imageToDelete }), { 
+                preserveScroll: true,
+                onFinish: () => setImageToDelete(null)
+            });
+        }
+    };
+
     const { data, setData, post, processing, errors } = useForm({
         name: product.name,
         category_id: product.category_id,
@@ -27,6 +39,8 @@ export default function Edit({ product, categories, all_customizations }) {
     const submit = (e) => {
         e.preventDefault();
         post(route('admin.products.update', product.id), {
+            forceFormData: true,
+            preserveScroll: true,
             onError: () => window.scrollTo({ top: 0, behavior: 'smooth' })
         });
     };
@@ -126,9 +140,7 @@ export default function Edit({ product, categories, all_customizations }) {
                                                 type="button" 
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    if (confirm('Are you sure you want to delete this image?')) {
-                                                        router.delete(route('admin.products.images.destroy', { product: product.id, image: img.id }), { preserveScroll: true });
-                                                    }
+                                                    setImageToDelete(img.id);
                                                 }}
                                                 className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow hover:bg-red-700"
                                             >
@@ -293,6 +305,16 @@ export default function Edit({ product, categories, all_customizations }) {
 
                 </form>
             </div>
+
+            <ConfirmModal
+                isOpen={!!imageToDelete}
+                title="Delete Image"
+                message="Are you sure you want to delete this image? This action cannot be undone."
+                onConfirm={deleteImage}
+                onCancel={() => setImageToDelete(null)}
+                confirmText="Delete Image"
+                confirmStyle="danger"
+            />
         </AdminLayout>
     );
 }

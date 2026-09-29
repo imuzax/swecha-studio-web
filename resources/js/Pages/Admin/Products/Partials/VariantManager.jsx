@@ -1,9 +1,11 @@
 import { useForm, router } from '@inertiajs/react';
 import { useState } from 'react';
+import ConfirmModal from '@/Components/ConfirmModal';
 
 export default function VariantManager({ product }) {
     const [editingVariant, setEditingVariant] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [variantToDelete, setVariantToDelete] = useState(null);
 
     const { data, setData, post, put, reset, errors, clearErrors } = useForm({
         type: '',
@@ -63,10 +65,11 @@ export default function VariantManager({ product }) {
         }
     };
 
-    const handleDelete = (variant) => {
-        if (confirm('Are you sure you want to delete this variant?')) {
-            router.delete(route('admin.products.variants.destroy', { product: product.id, variant: variant.id }), {
-                preserveScroll: true
+    const handleDelete = () => {
+        if (variantToDelete) {
+            router.delete(route('admin.products.variants.destroy', { product: product.id, variant: variantToDelete.id }), {
+                preserveScroll: true,
+                onFinish: () => setVariantToDelete(null)
             });
         }
     };
@@ -210,7 +213,7 @@ export default function VariantManager({ product }) {
                                     </td>
                                     <td className="px-4 py-2 text-right">
                                         <button onClick={() => handleEdit(v)} className="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button onClick={() => handleDelete(v)} className="text-red-600 hover:text-red-900">Delete</button>
+                                        <button onClick={() => setVariantToDelete(v)} className="text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             ))
@@ -224,6 +227,16 @@ export default function VariantManager({ product }) {
                     </tbody>
                 </table>
             </div>
+
+            <ConfirmModal
+                isOpen={!!variantToDelete}
+                title="Delete Variant"
+                message="Are you sure you want to delete this variant? This action cannot be undone."
+                onConfirm={handleDelete}
+                onCancel={() => setVariantToDelete(null)}
+                confirmText="Delete Variant"
+                confirmStyle="danger"
+            />
         </div>
     );
 }

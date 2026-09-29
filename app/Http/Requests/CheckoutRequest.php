@@ -25,10 +25,7 @@ class CheckoutRequest extends FormRequest
             'state' => 'required_without:address_id|string|max:255|nullable',
             'postal_code' => 'required_without:address_id|string|max:20|nullable',
             'country' => 'required_without:address_id|string|max:255|nullable',
-            'payment_method' => 'required|string|in:whatsapp,razorpay',
-            'razorpay_payment_id' => 'required_if:payment_method,razorpay|string|nullable',
-            'razorpay_order_id' => 'required_if:payment_method,razorpay|string|nullable',
-            'razorpay_signature' => 'required_if:payment_method,razorpay|string|nullable',
+            'payment_method' => 'required|string|in:whatsapp',
         ];
     }
 }

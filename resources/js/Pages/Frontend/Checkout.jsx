@@ -20,10 +20,7 @@ export default function Checkout({ cart, total, addresses = [] }) {
         state: '',
         postal_code: '',
         country: 'India',
-        payment_method: 'razorpay',
-        razorpay_payment_id: '',
-        razorpay_order_id: '',
-        razorpay_signature: ''
+        payment_method: 'whatsapp'
     });
 
     useEffect(() => {
@@ -39,77 +36,11 @@ export default function Checkout({ cart, total, addresses = [] }) {
             total: total,
             items: cart.length
         });
-        
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.async = true;
-        document.body.appendChild(script);
-        return () => {
-            document.body.removeChild(script);
-        };
     }, []);
 
     const submit = async (e) => {
         e.preventDefault();
-        
-        if (data.payment_method === 'razorpay') {
-            try {
-                // 1. Create order on server
-                const response = await axios.post(route('checkout.razorpay.create'));
-                const orderData = response.data;
-                
-                // 2. Open Razorpay Checkout
-                const options = {
-                    key: orderData.key,
-                    amount: orderData.amount,
-                    currency: orderData.currency,
-                    name: 'Swecha Studio',
-                    description: 'Order Payment',
-                    image: '/images/main_logo.png',
-                    order_id: orderData.id,
-                    handler: function (response) {
-                        // 3. On success, submit our form
-                        data.razorpay_payment_id = response.razorpay_payment_id;
-                        data.razorpay_order_id = response.razorpay_order_id;
-                        data.razorpay_signature = response.razorpay_signature;
-                        post(route('checkout.process'));
-                    },
-                    prefill: {
-                        name: data.first_name ? `${data.first_name} ${data.last_name}` : '',
-                        email: data.email,
-                        contact: data.phone
-                    },
-                    theme: {
-                        color: '#000000'
-                    }
-                };
-                
-                const rzp1 = new window.Razorpay(options);
-                rzp1.on('payment.failed', function (response) {
-                    trackEvent('payment_failure', {
-                        error_code: response.error.code,
-                        error_reason: response.error.reason,
-                        error_step: response.error.step,
-                        error_source: response.error.source
-                    });
-                    alert('Payment Failed: ' + response.error.description);
-                });
-                
-                trackEvent('payment_initiated', {
-                    order_id: orderData.id,
-                    amount: orderData.amount,
-                    currency: orderData.currency
-                });
-                
-                rzp1.open();
-                
-            } catch (error) {
-                console.error(error);
-                alert('Failed to initialize payment. Please try again or use WhatsApp checkout.');
-            }
-        } else {
-            post(route('checkout.process'));
-        }
+        post(route('checkout.process'));
     };
 
     return (
@@ -219,20 +150,6 @@ export default function Checkout({ cart, total, addresses = [] }) {
 
                         <h2 className="text-xl font-bold uppercase tracking-wider mb-4 border-b pb-2">Payment</h2>
                         <div className="mb-8 space-y-4">
-                            <label className={`flex items-center p-4 border rounded cursor-pointer transition ${data.payment_method === 'razorpay' ? 'bg-gray-50 border-black ring-1 ring-black' : 'border-gray-200'}`}>
-                                <input 
-                                    type="radio" 
-                                    name="payment_method"
-                                    checked={data.payment_method === 'razorpay'} 
-                                    onChange={() => setData('payment_method', 'razorpay')}
-                                    className="text-black focus:ring-black mr-4 h-5 w-5" 
-                                />
-                                <div>
-                                    <p className="font-bold">Online Payment (Razorpay)</p>
-                                    <p className="text-sm text-gray-500">Pay securely via UPI, Credit/Debit Card, or Netbanking.</p>
-                                </div>
-                            </label>
-                            
                             <label className={`flex items-center p-4 border rounded cursor-pointer transition ${data.payment_method === 'whatsapp' ? 'bg-gray-50 border-black ring-1 ring-black' : 'border-gray-200'}`}>
                                 <input 
                                     type="radio" 
@@ -251,9 +168,17 @@ export default function Checkout({ cart, total, addresses = [] }) {
                         <button 
                             type="submit" 
                             disabled={processing}
-                            className={`w-full py-4 uppercase tracking-widest font-bold text-white transition ${processing ? 'bg-gray-400' : 'bg-black hover:bg-gray-800'}`}
+                            className={`w-full py-4 uppercase tracking-widest font-bold text-white transition flex items-center justify-center ${processing ? 'bg-gray-400' : 'bg-black hover:bg-gray-800'}`}
                         >
-                            {processing ? 'Processing...' : (data.payment_method === 'razorpay' ? 'Pay Now' : 'Place Order on WhatsApp')}
+                            {processing ? (
+                                <>
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Processing...
+                                </>
+                            ) : 'Place Order on WhatsApp'}
                         </button>
                     </form>
                 </div>

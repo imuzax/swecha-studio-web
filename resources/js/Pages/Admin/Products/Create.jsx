@@ -23,6 +23,7 @@ export default function Create({ categories }) {
     const submit = (e) => {
         e.preventDefault();
         post(route('admin.products.store'), {
+            forceFormData: true,
             onError: () => window.scrollTo({ top: 0, behavior: 'smooth' })
         });
     };

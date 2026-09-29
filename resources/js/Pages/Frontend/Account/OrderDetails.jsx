@@ -85,22 +85,49 @@ export default function OrderDetails({ order }) {
                         <div className="p-6">
                             <h2 className="text-lg font-bold uppercase tracking-widest border-b pb-4 mb-6">Items</h2>
                             <div className="space-y-6">
-                                {order.items.map(item => (
-                                    <div key={item.id} className="flex justify-between items-start">
-                                        <div>
-                                            <p className="font-bold">{item.quantity}x {item.product_name}</p>
-                                            <div className="text-sm text-gray-600 mt-1">
-                                                {item.variant_info && item.variant_info.value && (
-                                                    <p>Variant: <span className="font-medium text-black">{item.variant_info.value}</span></p>
-                                                )}
-                                                {item.customization_info && item.customization_info.length > 0 && (
-                                                    <p>Customizations: <span className="font-medium text-black">{item.customization_info.map(c => c.option).join(', ')}</span></p>
+                                {order.items.map(item => {
+                                    const imagePath = item.product && item.product.images && item.product.images.length > 0 
+                                        ? item.product.images[0].path 
+                                        : null;
+                                    const productUrl = item.product && item.product.slug ? route('product.detail', item.product.slug) : null;
+                                    
+                                    return (
+                                        <div key={item.id} className="flex items-start gap-4">
+                                            <div className="w-16 h-16 bg-gray-200 rounded overflow-hidden flex-shrink-0 flex items-center justify-center">
+                                                {productUrl ? (
+                                                    <Link href={productUrl}>
+                                                        {imagePath ? <img src={`/storage/${imagePath}`} className="w-full h-full object-cover" /> : <span className="text-gray-400 text-xs">No img</span>}
+                                                    </Link>
+                                                ) : (
+                                                    imagePath ? <img src={`/storage/${imagePath}`} className="w-full h-full object-cover grayscale opacity-60" /> : <span className="text-gray-400 text-xs">No img</span>
                                                 )}
                                             </div>
+                                            <div className="flex-1">
+                                                {productUrl ? (
+                                                    <Link href={productUrl} className="font-bold hover:text-gray-600 transition">{item.product_name}</Link>
+                                                ) : (
+                                                    <div>
+                                                        <span className="font-bold text-gray-500 line-through">{item.product_name}</span>
+                                                        <span className="ml-2 text-xs text-red-500 uppercase tracking-widest">Product no longer available</span>
+                                                    </div>
+                                                )}
+                                                
+                                                <div className="text-sm text-gray-600 mt-1">
+                                                    {item.variant_info && item.variant_info.value && (
+                                                        <p>Variant: <span className="font-medium text-black">{item.variant_info.value}</span></p>
+                                                    )}
+                                                    {item.customization_info && item.customization_info.length > 0 && (
+                                                        <p>Customizations: <span className="font-medium text-black">{item.customization_info.map(c => c.option).join(', ')}</span></p>
+                                                    )}
+                                                    <p className="mt-1">Qty: {item.quantity} × ₹{Number(item.price).toLocaleString('en-IN')}</p>
+                                                </div>
+                                            </div>
+                                            <div className="font-sans font-medium text-lg">
+                                                ₹{Number(item.line_total).toLocaleString('en-IN')}
+                                            </div>
                                         </div>
-                                        <p className="font-sans font-medium text-lg">₹{Number(item.line_total).toLocaleString('en-IN')}</p>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                             
                             <div className="border-t mt-6 pt-6 grid grid-cols-1 md:grid-cols-2 gap-8">

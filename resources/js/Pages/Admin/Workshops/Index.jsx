@@ -2,11 +2,16 @@ import AdminLayout from '@/Layouts/Admin/AdminLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import PrimaryButton from '@/Components/PrimaryButton';
+import ConfirmModal from '@/Components/ConfirmModal';
+import { useState } from 'react';
 
 export default function Index({ workshops }) {
-    const deleteWorkshop = (id) => {
-        if (confirm('Are you sure you want to delete this workshop?')) {
-            router.delete(route('admin.workshops.destroy', id));
+    const [workshopToDelete, setWorkshopToDelete] = useState(null);
+    const deleteWorkshop = () => {
+        if (workshopToDelete) {
+            router.delete(route('admin.workshops.destroy', workshopToDelete), {
+                onFinish: () => setWorkshopToDelete(null)
+            });
         }
     };
 
@@ -85,7 +90,7 @@ export default function Index({ workshops }) {
                                             Edit
                                         </Link>
                                         <button 
-                                            onClick={() => deleteWorkshop(workshop.id)}
+                                            onClick={() => setWorkshopToDelete(workshop.id)}
                                             className="text-sm font-medium text-red-600 hover:text-red-900 transition-colors"
                                         >
                                             Delete
@@ -104,6 +109,16 @@ export default function Index({ workshops }) {
                     </table>
                 </div>
             </motion.div>
+
+            <ConfirmModal
+                isOpen={!!workshopToDelete}
+                title="Delete Workshop"
+                message="Are you sure you want to delete this workshop? This will also remove associated dates and cannot be undone."
+                onConfirm={deleteWorkshop}
+                onCancel={() => setWorkshopToDelete(null)}
+                confirmText="Delete Workshop"
+                confirmStyle="danger"
+            />
         </AdminLayout>
     );
 }
