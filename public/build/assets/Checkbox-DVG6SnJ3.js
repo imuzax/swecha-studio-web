@@ -1,0 +1,1 @@
+import{t as e}from"./app-D3UKC12V.js";var t=e();function n({className:e=``,...n}){return(0,t.jsx)(`input`,{...n,type:`checkbox`,className:`rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 `+e})}export{n as t};

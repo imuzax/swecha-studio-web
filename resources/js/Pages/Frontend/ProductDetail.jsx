@@ -253,11 +253,11 @@ export default function ProductDetail({ product, similarProducts, isWishlisted }
                             
                             {displayImages.length > 1 && (
                                 <>
-                                    <button type="button" onClick={() => scrollCarousel(-1)} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-md items-center justify-center text-brand-900 text-xl leading-none pb-1 opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex focus:outline-none z-20">
-                                        &larr;
+                                    <button type="button" onClick={() => scrollCarousel(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-16 bg-white/40 hover:bg-white/60 backdrop-blur-md border border-white/50 shadow-sm rounded-lg flex items-center justify-center text-gray-900 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden md:flex focus:outline-none z-20">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7" /></svg>
                                     </button>
-                                    <button type="button" onClick={() => scrollCarousel(1)} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-md items-center justify-center text-brand-900 text-xl leading-none pb-1 opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex focus:outline-none z-20">
-                                        &rarr;
+                                    <button type="button" onClick={() => scrollCarousel(1)} className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-16 bg-white/40 hover:bg-white/60 backdrop-blur-md border border-white/50 shadow-sm rounded-lg flex items-center justify-center text-gray-900 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden md:flex focus:outline-none z-20">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" /></svg>
                                     </button>
                                 </>
                             )}
