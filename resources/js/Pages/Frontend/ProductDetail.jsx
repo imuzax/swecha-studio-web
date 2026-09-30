@@ -207,9 +207,11 @@ export default function ProductDetail({ product, similarProducts, isWishlisted }
                                     <img 
                                         src={img.url} 
                                         alt={`${product.name} - View ${idx + 1}`} 
-                                        className="w-full h-full object-cover object-center image-smooth"
+                                        className="w-full h-full object-cover object-center image-smooth select-none pointer-events-auto"
                                         loading={idx === 0 ? "eager" : "lazy"}
                                         decoding="async"
+                                        draggable={false}
+                                        onContextMenu={(e) => e.preventDefault()}
                                     />
                                 </div>
                             ))
@@ -271,7 +273,7 @@ export default function ProductDetail({ product, similarProducts, isWishlisted }
                                                 type="button" 
                                                 onClick={() => scrollToImage(index)}
                                                 className={`flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 focus:outline-none transition-all duration-200 ${activeIndex === index ? 'border-brand-500 ring-2 ring-brand-500/30 shadow-sm' : 'border-brand-200/80 opacity-75 hover:opacity-100 hover:border-brand-400'}`}>
-                                            <img src={img.url} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover pointer-events-none" loading="lazy" decoding="async" />
+                                            <img src={img.url} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} onContextMenu={(e) => e.preventDefault()} />
                                         </button>
                                     ))}
                                 </div>

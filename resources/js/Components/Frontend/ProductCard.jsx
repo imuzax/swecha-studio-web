@@ -18,9 +18,11 @@ export default function ProductCard({ product }) {
                     <img 
                         src={imageUrl} 
                         alt={product.name} 
-                        className="w-full h-full object-cover object-center image-smooth group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="w-full h-full object-cover object-center image-smooth group-hover:scale-105 transition-transform duration-700 ease-out select-none pointer-events-auto"
                         loading="lazy"
                         decoding="async"
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
                     />
                 ) : (
                     <div className="w-full h-full bg-stone-100 flex items-center justify-center">
