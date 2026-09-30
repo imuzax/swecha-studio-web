@@ -7,10 +7,10 @@ export default function AdminLayout({ children }) {
     useEffect(() => {
         const handleFileChange = (e) => {
             if (e.target && e.target.type === 'file' && e.target.files && e.target.files.length > 0) {
-                const maxSize = 2 * 1024 * 1024; // 2MB
+                const maxSize = 10 * 1024 * 1024; // 10MB
                 for (let i = 0; i < e.target.files.length; i++) {
                     if (e.target.files[i].size > maxSize) {
-                        alert(`❌ Upload Failed!\n\nThe file "${e.target.files[i].name}" is larger than 2MB.\nPlease upload an image smaller than 2MB to continue.`);
+                        alert(`❌ Upload Failed!\n\nThe file "${e.target.files[i].name}" is larger than 10MB.\nPlease upload a file smaller than 10MB to continue.`);
                         e.target.value = ''; // Clear the input
                         return;
                     }
